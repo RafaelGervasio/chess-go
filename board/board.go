@@ -23,9 +23,9 @@ func (b *Board) InitializeBoard() {
 			case 1:
 				b.Positions[square] = createPiece(col, piece.White)
 			case 2:
-				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.White, Display: "♙"}
+				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.White, Display: "♙", Moved: false}
 			case 7:
-				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.Black, Display: "♟"}
+				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.Black, Display: "♟", Moved: false}
 			case 8:
 				b.Positions[square] = createPiece(col, piece.Black)
 			default:
@@ -39,15 +39,15 @@ func (b *Board) InitializeBoard() {
 func createPiece(col int, color piece.Turn) *piece.Piece {
 	switch col {
 	case 1, 8:
-		return &piece.Piece{Name: "Rook", Color: color, Display: "♖"}
+		return &piece.Piece{Name: "Rook", Color: color, Display: "♖", Moved: false}
 	case 2, 7:
-		return &piece.Piece{Name: "Knight", Color: color, Display: "♘"}
+		return &piece.Piece{Name: "Knight", Color: color, Display: "♘", Moved: false}
 	case 3, 6:
-		return &piece.Piece{Name: "Bishop", Color: color, Display: "♗"}
+		return &piece.Piece{Name: "Bishop", Color: color, Display: "♗", Moved: false}
 	case 4:
-		return &piece.Piece{Name: "Queen", Color: color, Display: "♕"}
+		return &piece.Piece{Name: "Queen", Color: color, Display: "♕", Moved: false}
 	case 5:
-		return &piece.Piece{Name: "King", Color: color, Display: "♔"}
+		return &piece.Piece{Name: "King", Color: color, Display: "♔", Moved: false}
 	default:
 		return nil
 	}
@@ -79,6 +79,16 @@ func (b *Board) AddToBoard(square square.Square, piece *piece.Piece) {
 func (b *Board) DeleteFromBoard(square square.Square) {
 	b.Positions[square] = nil
 }
+
+func (b Board) GetSquareAndPiece(row, col int) (square.Square, piece.Piece, err) {
+	for square, piece := range b.Positions {
+		if square.Row == row && square.Col == col {
+			return square, piece, nil
+		}
+	}
+	return nil, nil, fmt.Errof("Square not found for row: %d and col: %d", row, col)
+}
+
 
 // GetBoardCopy returns a copy of the board with all its pieces.
 func (b Board) GetBoardCopy() Board {

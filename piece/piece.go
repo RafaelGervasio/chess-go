@@ -12,6 +12,7 @@ type Piece struct {
 	Name    string
 	Color   Turn
 	Display string
+	HasMoved bool
 }
 
 

@@ -86,13 +86,13 @@ func (b Board) GetBoardCopy() Board {
 	copyPositions := make(map[square.Square]*piece.Piece)
 
 	// Iterate over the original board's positions and copy the pieces
-	for square, piece := range b.Positions {
-		if piece != nil {
+	for square, pieceInSquare := range b.Positions {
+		if pieceInSquare != nil {
 			// Create a new piece copy
 			copyPositions[square] = &piece.Piece{
-				Name:    piece.Name,
-				Color:   piece.Color,
-				Display: piece.Display,
+				Name:    pieceInSquare.Name,
+				Color:   pieceInSquare.Color,
+				Display: pieceInSquare.Display,
 			}
 		} else {
 			// If the piece is nil, just set the value to nil in the copy

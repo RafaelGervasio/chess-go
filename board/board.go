@@ -2,8 +2,10 @@ package board
 
 import (
 	"fmt"
+	"errors"
 	"github.com/RafaelGervasio/chess-go/piece" // import the Piece package
 	"github.com/RafaelGervasio/chess-go/square" // import the Square package
+
 )
 
 type Board struct {
@@ -36,7 +38,7 @@ func (b *Board) InitializeBoard() {
 }
 
 // Helper function to create pieces for the back row based on column
-func createPiece(col int, color piece.Turn) *piece.Piece {
+func createPiece(col int, color piece.Color) *piece.Piece {
 	switch col {
 	case 1, 8:
 		return &piece.Piece{Name: "Rook", Color: color, Display: "♖", Moved: false}
@@ -80,7 +82,8 @@ func (b *Board) DeleteFromBoard(square square.Square) {
 	b.Positions[square] = nil
 }
 
-func (b Board) GetSquareAndPiece(row, col int) (square.Square, piece.Piece, err) {
+
+func (b Board) GetSquareAndPiece(row, col int) (square.Square, piece.Piece, err error) {
 	for square, piece := range b.Positions {
 		if square.Row == row && square.Col == col {
 			return square, piece, nil
@@ -89,6 +92,10 @@ func (b Board) GetSquareAndPiece(row, col int) (square.Square, piece.Piece, err)
 	return nil, nil, fmt.Errof("Square not found for row: %d and col: %d", row, col)
 }
 
+
+func (b Board) GetPieceFromSquare (square square.Square) (piece.Piece) {
+	return b.Positions[square]
+}
 
 // GetBoardCopy returns a copy of the board with all its pieces.
 func (b Board) GetBoardCopy() Board {
@@ -103,6 +110,7 @@ func (b Board) GetBoardCopy() Board {
 				Name:    pieceInSquare.Name,
 				Color:   pieceInSquare.Color,
 				Display: pieceInSquare.Display,
+				Moved:   pieceInSquare.Moved,
 			}
 		} else {
 			// If the piece is nil, just set the value to nil in the copy
@@ -116,4 +124,29 @@ func (b Board) GetBoardCopy() Board {
 
 
 
-// I like this. Seems like a pretty clear and complete package.
+// GetAllPiecesOfColor returns all pieces of the opposite color.
+func (b Board) GetSquaresAndPiecesOfColor(color piece.Color) (map[square.Square]*piece.Piece) {
+	positionsOfColor := make(map[square.Square]*piece.Piece)
+
+    for square, piece := range board.Positions {
+        if piece != nil && piece.Color == color {
+            positionsOfColor[square] = piece
+        }
+    }
+    return positionsOfColor
+}
+
+
+// GetKingSquare returns the square of the king for the given color.
+func (b Board) GetKingSquare(color piece.Color) (square.Square, err) {
+    for square, piece := range board.Positions {
+        if piece != nil && piece.Name == "king" && piece.Color == color {
+            return square, nil
+        }
+    }
+    return nil, fmt.Errof("GetKingSquare: King of color %v not found in board.", color)
+}
+
+
+
+

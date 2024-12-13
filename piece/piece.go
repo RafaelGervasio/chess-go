@@ -1,18 +1,12 @@
 package piece
 
+// impor the turn struct here. turn here.
 
-type Turn int
-
-const (
-	White Turn = iota
-	Black
-)
 
 type Piece struct {
 	Name    string
-	Color   Turn
+	Color   Color
 	Display string
 	HasMoved bool
 }
-
 

@@ -2,7 +2,6 @@ package board
 
 import (
 	"fmt"
-	"errors"
 	"github.com/RafaelGervasio/chess-go/piece" // import the Piece package
 	"github.com/RafaelGervasio/chess-go/square" // import the Square package
 
@@ -25,9 +24,9 @@ func (b *Board) InitializeBoard() {
 			case 1:
 				b.Positions[square] = createPiece(col, piece.White)
 			case 2:
-				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.White, Display: "♙", Moved: false}
+				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.White, Display: "♙", HasMoved: false}
 			case 7:
-				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.Black, Display: "♟", Moved: false}
+				b.Positions[square] = &piece.Piece{Name: "Pawn", Color: piece.Black, Display: "♟", HasMoved: false}
 			case 8:
 				b.Positions[square] = createPiece(col, piece.Black)
 			default:
@@ -41,15 +40,15 @@ func (b *Board) InitializeBoard() {
 func createPiece(col int, color piece.Color) *piece.Piece {
 	switch col {
 	case 1, 8:
-		return &piece.Piece{Name: "Rook", Color: color, Display: "♖", Moved: false}
+		return &piece.Piece{Name: "Rook", Color: color, Display: "♖", HasMoved: false}
 	case 2, 7:
-		return &piece.Piece{Name: "Knight", Color: color, Display: "♘", Moved: false}
+		return &piece.Piece{Name: "Knight", Color: color, Display: "♘", HasMoved: false}
 	case 3, 6:
-		return &piece.Piece{Name: "Bishop", Color: color, Display: "♗", Moved: false}
+		return &piece.Piece{Name: "Bishop", Color: color, Display: "♗", HasMoved: false}
 	case 4:
-		return &piece.Piece{Name: "Queen", Color: color, Display: "♕", Moved: false}
+		return &piece.Piece{Name: "Queen", Color: color, Display: "♕", HasMoved: false}
 	case 5:
-		return &piece.Piece{Name: "King", Color: color, Display: "♔", Moved: false}
+		return &piece.Piece{Name: "King", Color: color, Display: "♔", HasMoved: false}
 	default:
 		return nil
 	}
@@ -83,17 +82,17 @@ func (b *Board) DeleteFromBoard(square square.Square) {
 }
 
 
-func (b Board) GetSquareAndPiece(row, col int) (square.Square, piece.Piece, err error) {
+func (b Board) GetSquareAndPiece(row, col int) (square.Square, *piece.Piece, error) {
 	for square, piece := range b.Positions {
 		if square.Row == row && square.Col == col {
 			return square, piece, nil
 		}
 	}
-	return nil, nil, fmt.Errof("Square not found for row: %d and col: %d", row, col)
+	return square.Square{Row: 0, Col: 0}, nil, fmt.Errorf("Square not found for row: %d and col: %d", row, col)
 }
 
 
-func (b Board) GetPieceFromSquare (square square.Square) (piece.Piece) {
+func (b Board) GetPieceFromSquare (square square.Square) *piece.Piece {
 	return b.Positions[square]
 }
 
@@ -110,7 +109,7 @@ func (b Board) GetBoardCopy() Board {
 				Name:    pieceInSquare.Name,
 				Color:   pieceInSquare.Color,
 				Display: pieceInSquare.Display,
-				Moved:   pieceInSquare.Moved,
+				HasMoved:   pieceInSquare.HasMoved,
 			}
 		} else {
 			// If the piece is nil, just set the value to nil in the copy
@@ -128,7 +127,7 @@ func (b Board) GetBoardCopy() Board {
 func (b Board) GetSquaresAndPiecesOfColor(color piece.Color) (map[square.Square]*piece.Piece) {
 	positionsOfColor := make(map[square.Square]*piece.Piece)
 
-    for square, piece := range board.Positions {
+    for square, piece := range b.Positions {
         if piece != nil && piece.Color == color {
             positionsOfColor[square] = piece
         }
@@ -138,13 +137,13 @@ func (b Board) GetSquaresAndPiecesOfColor(color piece.Color) (map[square.Square]
 
 
 // GetKingSquare returns the square of the king for the given color.
-func (b Board) GetKingSquare(color piece.Color) (square.Square, err) {
-    for square, piece := range board.Positions {
+func (b Board) GetKingSquare(color piece.Color) (square.Square, error) {
+    for square, piece := range b.Positions {
         if piece != nil && piece.Name == "king" && piece.Color == color {
             return square, nil
         }
     }
-    return nil, fmt.Errof("GetKingSquare: King of color %v not found in board.", color)
+    return square.Square{Row: 0, Col: 0}, fmt.Errorf("GetKingSquare: King of color %v not found in board.", color)
 }
 
 

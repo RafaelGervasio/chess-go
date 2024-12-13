@@ -10,3 +10,10 @@ type Piece struct {
 	HasMoved bool
 }
 
+
+type Color int
+
+const (
+	White Color = iota
+	Black
+)

@@ -234,3 +234,11 @@ func abs(x int) int {
     return x
 }
 
+// oppositeColor returns the opposite color of the given color.
+func oppositeColor(color piece.Color) piece.Color {
+    if color == piece.White {
+        return piece.Black
+    }
+    return piece.White
+}
+

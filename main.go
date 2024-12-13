@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/RafaelGervasio/chess-go/board"
+	"github.com/RafaelGervasio/chess-go/piece"
+	"github.com/RafaelGervasio/chess-go/movement"
+	"github.com/RafaelGervasio/chess-go/square"
 	"os"
 	"errors"
 	"fmt"
@@ -10,17 +13,11 @@ import (
 
 
 // type Game struct {
-// 	Board Board
-// 	Color  Color
+// 	Board board.Board
+// 	Turn  piece.Color
 // }
 
 
-type Color int
-
-const (
-	White Color = iota
-	Black
-)
 
 
 func main() {
@@ -33,6 +30,7 @@ func main() {
 	// transalte that into start end piece color 
 		// 
 }
+
 
 
 func getUserInput(board board.Board, turn piece.Color) (startSquare, endSquare square.Square, piece piece.Piece, err error) {
@@ -121,28 +119,6 @@ func validInput(startSquare, endSquare square.Square, piece piece.Piece, turn pi
 }
 
 	
-func leavesPlayerInCheck(board board.Board, start, end square.Square, piece piece.Piece, color piece.Color) bool {
-    hadMoved := piece.HasMoved
-    
-    boardToMutate := GetBoardCopy()
-    boardToMutate.DeleteFromBoard(end)
-    boardToMutate.AddToBoard(end, piece)
-    boardToMutate.DeleteFromBoard(start)
-
-    piece.HasMoved = hadMoved
-
-    return Check(boardToMutate, color)
-}
-
-// I'm goong to need to call this thing (or just exec the logic) in the driver
-
-// oppositeColor returns the opposite color of the given color.
-func oppositeColor(color piece.Color) piece.Color {
-    if color == piece.White {
-        return piece.Black
-    }
-    return piece.White
-}
 
 
 

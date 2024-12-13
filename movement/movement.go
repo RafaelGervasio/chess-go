@@ -181,11 +181,11 @@ func Check(board board.Board, color piece.Color) bool, err {
 
 
 
-func CheckMate(board board.Board, color Color) (bool, error) {
+func Checkmate(board board.Board, color Color) (bool, error) {
     if inCheck, err := Check(board, color); err != nil {
-        return false, fmt.Errorf("CheckMate: %w", err)
+        return false, fmt.Errorf("Checkmate: %w", err)
     } else if !inCheck {
-        return false, nil // Not in check, so not checkmate
+        return false, nil // Not in check, so not Checkmate
     }
 
     copyOfBoard := board.GetBoardCopy()
